@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Reports</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container-fluid mt-4">
+
+        <h2>Procurement Reports</h2>
+
+        <p class="text-muted">
+            {% if company %}
+            {{ company.name }}
+            {% else %}
+            System-wide Report
+            {% endif %}
+        </p>
+
+        <hr>
+
+
+        <!-- ===================================================== -->
+        <!-- FINANCIAL SUMMARY -->
+        <!-- ===================================================== -->
+
+        <h4 class="mb-3">Financial Summary</h4>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h6>Total Purchase Spend</h6>
+
+                        <h3>
+                            ₹{{ purchase_spend }}
+                        </h3>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h6>Total Paid</h6>
+
+                        <h3>
+                            ₹{{ total_paid }}
+                        </h3>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h6>Outstanding</h6>
+
+                        <h3>
+                            ₹{{ outstanding_amount }}
+                        </h3>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- PURCHASE ORDER REPORT -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Purchase Order Summary</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ purchase_order_summary.total }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Draft</td>
+                        <td>{{ purchase_order_summary.draft }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Sent</td>
+                        <td>{{ purchase_order_summary.sent }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Acknowledged</td>
+                        <td>{{ purchase_order_summary.acknowledged }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Partially Delivered</td>
+                        <td>{{ purchase_order_summary.partially_delivered }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Delivered</td>
+                        <td>{{ purchase_order_summary.delivered }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Cancelled</td>
+                        <td>{{ purchase_order_summary.cancelled }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Closed</td>
+                        <td>{{ purchase_order_summary.closed }}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- VENDOR REPORT -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Vendor Summary</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>Vendor</th>
+                        <th>Orders</th>
+                        <th>Order Value</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in vendor_summary %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.vendor.name }}
+                        </td>
+
+                        <td>
+                            {{ item.order_count }}
+                        </td>
+
+                        <td>
+                            ₹{{ item.order_value }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="3">
+                            No vendor data available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- VENDOR PERFORMANCE -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Vendor Performance</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>Vendor</th>
+                        <th>Evaluations</th>
+                        <th>Delivery</th>
+                        <th>Quality</th>
+                        <th>Pricing</th>
+                        <th>Service</th>
+                        <th>Overall</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in vendor_performance %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.vendor__name }}
+                        </td>
+
+                        <td>
+                            {{ item.evaluation_count }}
+                        </td>
+
+                        <td>
+                            {{ item.average_delivery|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            {{ item.average_quality|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            {{ item.average_pricing|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            {{ item.average_service|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            {{ item.average_overall|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7">
+                            No vendor performance data available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- DELIVERY REPORT -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Delivery Performance</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ delivery_summary.total }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Draft</td>
+                        <td>{{ delivery_summary.draft }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>In Transit</td>
+                        <td>{{ delivery_summary.in_transit }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Partially Delivered</td>
+                        <td>{{ delivery_summary.partially_delivered }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Delivered</td>
+                        <td>{{ delivery_summary.delivered }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Cancelled</td>
+                        <td>{{ delivery_summary.cancelled }}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- CATEGORY SPEND -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Category-wise Spend</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Orders</th>
+                        <th>Total Spend</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in category_spend %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.product__category__name|default:"Uncategorized" }}
+                        </td>
+
+                        <td>
+                            {{ item.total_quantity }}
+                        </td>
+
+                        <td>
+                            {{ item.order_count }}
+                        </td>
+
+                        <td>
+                            ₹{{ item.total_spend }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4">
+                            No category spending data available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- INVOICE SUMMARY -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Invoice Summary</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ invoice_summary.total }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Uploaded</td>
+                        <td>{{ invoice_summary.uploaded }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Under Review</td>
+                        <td>{{ invoice_summary.under_review }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Approved</td>
+                        <td>{{ invoice_summary.approved }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Rejected</td>
+                        <td>{{ invoice_summary.rejected }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Paid</td>
+                        <td>{{ invoice_summary.paid }}</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- RECENT PURCHASE ORDERS -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Recent Purchase Orders</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>PO Number</th>
+                        <th>Vendor</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for po in recent_purchase_orders %}
+
+                    <tr>
+
+                        <td>
+                            {{ po.po_number }}
+                        </td>
+
+                        <td>
+                            {{ po.vendor.name }}
+                        </td>
+
+                        <td>
+                            ₹{{ po.total_amount }}
+                        </td>
+
+                        <td>
+                            {{ po.get_status_display }}
+                        </td>
+
+                        <td>
+                            {{ po.po_date }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5">
+                            No purchase orders found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- RECENT INVOICES -->
+        <!-- ===================================================== -->
+
+        <h4 class="mt-5 mb-3">Recent Invoices</h4>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-bordered">
+
+                <thead>
+
+                    <tr>
+                        <th>Invoice Number</th>
+                        <th>PO</th>
+                        <th>Vendor</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for invoice in recent_invoices %}
+
+                    <tr>
+
+                        <td>
+                            {{ invoice.invoice_number }}
+                        </td>
+
+                        <td>
+                            {{ invoice.purchase_order.po_number }}
+                        </td>
+
+                        <td>
+                            {{ invoice.vendor.name }}
+                        </td>
+
+                        <td>
+                            ₹{{ invoice.total }}
+                        </td>
+
+                        <td>
+                            {{ invoice.get_status_display }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5">
+                            No invoices found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
